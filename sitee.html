@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Форми</title>
+</head>
+<body>
+
+<h2>HTML Форми</h2>
+
+<form id="formData">
+  <!-- Ім'я -->
+  <label for="fname">Введіть ім'я:</label><br>
+  <input type="text" id="fname" name="fname" value="John" required><br><br>
+
+  <!-- Вибір компанії, яка першою випустила серійний автомобіль -->
+  <p>Яка компанія першою випустила серійний автомобіль:</p>
+  <input type="radio" id="ford" name="company" value="ford" required>
+  <label for="ford">Ford</label><br>
+  <input type="radio" id="mercedes-benz" name="company" value="mercedes-benz">
+  <label for="mercedes-benz">Mercedes-Benz</label><br>
+  <input type="radio" id="bmw" name="company" value="bmw">
+  <label for="bmw">BMW</label><br><br>
+
+  <!-- Вибір країни для Ferrari -->
+  <p>Яка країна є батьківщиною бренду Ferrari:</p>
+  <input type="radio" id="germany" name="country" value="Німеччина" required>
+  <label for="germany">Німеччина</label><br>
+  <input type="radio" id="france" name="country" value="Франція">
+  <label for="france">Франція</label><br>
+  <input type="radio" id="italy" name="country" value="Італія">
+  <label for="italy">Італія</label><br><br>
+
+  <!-- Вибір марки автомобіля -->
+  <label for="cars">Виберіть марку машини:</label>
+  <select name="cars" id="cars">
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="opel">Opel</option>
+    <option value="audi">Audi</option>
+  </select><br><br>
+
+  <input type="submit" value="Відправити">
+</form>
+
+<script>
+  document.getElementById('formData').addEventListener('submit', function(event) {
+    event.preventDefault(); // Зупиняємо стандартну відправку форми
+
+    // Отримуємо значення з форми
+    var fname = document.getElementById('fname').value;
+    var company = document.querySelector('input[name="company"]:checked')?.value;
+    var country = document.querySelector('input[name="country"]:checked')?.value;
+    var car = document.getElementById('cars').value;
+
+    // Перевірка, чи вибрано значення для радіо-кнопок
+    if (!company || !country) {
+      alert('Будь ласка, виберіть компанію та країну!');
+      return;
+    }
+
+    // Формуємо об'єкт з даними
+    var data = {
+      fname: fname,
+      company: company,
+      country: country,
+      car: car
+    };
+
+    // Відправка даних на Google Apps Script через POST
+    fetch('https://script.google.com/macros/s/AKfycbxPHEGmRWaY5NEkHZRHL9CZcAfNDnAO_NAtJXYcxnjBGRAWfOY3-r1YeSY3XxRXm_5_/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log('Success:', result);
+      alert('Дані успішно надіслані!');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Сталася помилка при відправці даних!');
+    });
+  });
+</script>
+
+</body>
+</html>
